@@ -1685,6 +1685,7 @@
       }
     } else {
       d.done++;
+      d.index++;
       if (d.stage === 'practice' && d.done >= d.words.length) {
         updateDrillBox();
         finishGoal();
