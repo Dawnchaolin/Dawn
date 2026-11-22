@@ -2727,9 +2727,10 @@
       return;
     }
     state.ultFx = {
-      type: 'brush', t: 0, dur: 2.7, pass: 0, hits: {},
-      dmg: Math.max(1, Math.round(ATK * 3.2 * mul)),
-      trail: [], head: { x: -260, y: H * 0.46 }
+      type: 'brush', t: 0, dur: 2.1, pass: 0, hits: {},
+      dmg: Math.max(1, Math.round(ATK * 2.0 * mul)),
+      burst: Math.max(1, Math.round(ATK * 2.0 * mul)),
+      trail: [], head: { x: -280, y: H * 0.46 }
     };
   }
 
@@ -2826,7 +2827,7 @@
       var hx = pass === 0
         ? -280 + (W + 560) * seg
         : (W + 280) - (W + 560) * seg;
-      var hy = H * 0.46 + Math.sin(seg * Math.PI * 3 + pass * 1.7) * H * 0.16;
+      var hy = H * 0.48 + Math.sin(seg * Math.PI * 3 + pass * 1.7) * H * 0.26;
       fx.head.x = hx;
       fx.head.y = hy;
       fx.trail.push({ x: hx, y: hy });
@@ -2847,11 +2848,11 @@
         if (ed.dead) continue;
         var key = ed.id + ':' + pass;
         if (fx.hits[key]) continue;
-        var touched = Math.abs(ed.x - hx) < 86 + ed.r && Math.abs(ed.y - hy) < 86 + ed.r;
+        var touched = Math.abs(ed.x - hx) < 124 + ed.r && Math.abs(ed.y - hy) < 124 + ed.r;
         if (!touched) {
-          for (var tp = 0; tp < fx.trail.length; tp += 3) {
+          for (var tp = 0; tp < fx.trail.length; tp += 2) {
             var pt = fx.trail[tp];
-            if (Math.abs(ed.x - pt.x) < 56 + ed.r && Math.abs(ed.y - pt.y) < 56 + ed.r) {
+            if (Math.abs(ed.x - pt.x) < 90 + ed.r && Math.abs(ed.y - pt.y) < 90 + ed.r) {
               touched = true;
               break;
             }
@@ -2874,14 +2875,34 @@
         ring(PLAYER.x, playerTorso(), 60, '#2f4257', W * 0.8, 0.8);
         state.flash = Math.max(state.flash, 0.4);
       } else {
-        inkBurst(fx.head.x, fx.head.y, 34, 2.2);
-        for (var g = 0; g < 10; g++) {
+        // 龙归墨海：末端墨爆收尾，全场再结算一次
+        var bx = W * 0.5, by = H * 0.48;
+        var br = Math.max(W, H) * 0.62;
+        inkBurst(bx, by, 64, 3.2);
+        ring(bx, by, 60, '#d8b45c', br, 0.85);
+        ring(bx, by, 40, '#17130f', br * 0.8, 0.6);
+        state.flash = Math.max(state.flash, 0.58);
+        state.shake = Math.max(state.shake, 18);
+        addNumber(bx, by - 120, '终', true, false, true);
+        for (var g = 0; g < 26; g++) {
+          var ga = rand(0, Math.PI * 2), gs = rand(140, 640);
           state.particles.push({
-            x: fx.head.x + rand(-40, 40), y: fx.head.y + rand(-30, 30),
-            vx: rand(-120, 120), vy: rand(-160, -20), r: rand(1.4, 3.6),
-            life: rand(0.5, 1.0), maxLife: 1.0, gravity: 120,
-            color: g % 3 === 0 ? '#d8b45c' : '#17130f'
+            x: bx + Math.cos(ga) * rand(0, 60), y: by + Math.sin(ga) * rand(0, 40),
+            vx: Math.cos(ga) * gs, vy: Math.sin(ga) * gs - 40,
+            r: rand(1.6, 4.4), life: rand(0.6, 1.2), maxLife: 1.2, gravity: 90,
+            color: g % 3 === 0 ? '#d8b45c' : '#17130f', streak: g % 2 === 0
           });
+        }
+        for (var fb = 0; fb < state.enemies.length; fb++) {
+          var eb = state.enemies[fb];
+          if (eb.dead || fx.hits['fin:' + eb.id]) continue;
+          var bdx = eb.x - bx, bdy = eb.y - by;
+          if (Math.sqrt(bdx * bdx + bdy * bdy) <= br) {
+            fx.hits['fin:' + eb.id] = 1;
+            hitEnemy(eb, fx.burst, true);
+            ring(eb.x, eb.y, 12, '#d8b45c', 160, 0.5);
+            stainAt(eb.x, eb.y, rand(24, 40), '#17130f', 0.5);
+          }
         }
       }
       state.ultFx = null;
@@ -7518,17 +7539,27 @@
     for (var i = 1; i < trail.length; i++) {
       var t0 = i / trail.length;
       c.strokeStyle = 'rgba(47,66,87,' + (0.04 + t0 * 0.11) + ')';
-      c.lineWidth = 22 + t0 * 66;
+      c.lineWidth = 32 + t0 * 104;
       c.beginPath();
       c.moveTo(trail[i - 1].x, trail[i - 1].y);
       c.lineTo(trail[i].x, trail[i].y);
+      c.stroke();
+    }
+    // 鎏金外光：龙身外缘的金属光晕
+    for (var gi = 1; gi < trail.length; gi++) {
+      var gt = gi / trail.length;
+      c.strokeStyle = 'rgba(216,180,92,' + (0.03 + gt * 0.11) + ')';
+      c.lineWidth = 42 + gt * 124;
+      c.beginPath();
+      c.moveTo(trail[gi - 1].x, trail[gi - 1].y);
+      c.lineTo(trail[gi].x, trail[gi].y);
       c.stroke();
     }
     // 墨身：由尾至首渐粗
     for (var i = 1; i < trail.length; i++) {
       var t = i / trail.length;
       c.strokeStyle = 'rgba(23,19,15,' + (0.26 + t * 0.52) + ')';
-      c.lineWidth = 12 + t * 54;
+      c.lineWidth = 18 + t * 86;
       c.beginPath();
       c.moveTo(trail[i - 1].x, trail[i - 1].y);
       c.lineTo(trail[i].x, trail[i].y);
@@ -7536,30 +7567,30 @@
     }
     // 纸白腹线
     c.strokeStyle = 'rgba(239,230,211,0.2)';
-    c.lineWidth = 2;
+    c.lineWidth = 3.5;
     c.beginPath();
     for (var b = 2; b < trail.length; b++) {
       var bt = b / trail.length;
-      if (b === 2) c.moveTo(trail[b].x, trail[b].y - 6 - bt * 8);
-      else c.lineTo(trail[b].x, trail[b].y - 6 - bt * 8);
+      if (b === 2) c.moveTo(trail[b].x, trail[b].y - 8 - bt * 12);
+      else c.lineTo(trail[b].x, trail[b].y - 8 - bt * 12);
     }
     c.stroke();
     // 鎏金脊线
-    c.strokeStyle = 'rgba(216,180,92,0.55)';
-    c.lineWidth = 2;
+    c.strokeStyle = 'rgba(216,180,92,0.58)';
+    c.lineWidth = 3.2;
     c.beginPath();
     for (var s = 1; s < trail.length; s++) {
       if (s === 1) c.moveTo(trail[s].x, trail[s].y);
       else c.lineTo(trail[s].x, trail[s].y);
     }
     c.stroke();
-    // 金鳞与背鳍（稀疏一些，避免像一节节车厢）
+    // 金鳞与背鳍
     for (var d = 5; d < trail.length - 3; d += 9) {
       var dt = d / trail.length;
-      var sc = 1.6 + dt * 3.8;
+      var sc = 2.2 + dt * 5.6;
       c.fillStyle = 'rgba(216,180,92,' + (0.26 + dt * 0.32) + ')';
       c.beginPath();
-      c.ellipse(trail[d].x, trail[d].y, sc * 1.6, sc, 0, 0, Math.PI * 2);
+      c.ellipse(trail[d].x, trail[d].y, sc * 1.9, sc * 1.15, 0, 0, Math.PI * 2);
       c.fill();
       var p0 = trail[d], p1 = trail[d + 1];
       var fa = Math.atan2(p1.y - p0.y, p1.x - p0.x);
@@ -7568,9 +7599,9 @@
       c.rotate(fa);
       c.fillStyle = 'rgba(216,180,92,0.48)';
       c.beginPath();
-      c.moveTo(-7, -9 - sc);
-      c.lineTo(0, -25 - sc);
-      c.lineTo(8, -8 - sc);
+      c.moveTo(-9, -12 - sc);
+      c.lineTo(0, -36 - sc);
+      c.lineTo(10, -11 - sc);
       c.closePath();
       c.fill();
       c.restore();
@@ -7584,14 +7615,14 @@
     c.translate(h.x, h.y);
     c.rotate(ang);
     // 龙头金晕
-    var hglow = c.createRadialGradient(16, 0, 4, 16, 0, 78);
-    hglow.addColorStop(0, 'rgba(216,180,92,0.26)');
+    var hglow = c.createRadialGradient(20, 0, 6, 20, 0, 100);
+    hglow.addColorStop(0, 'rgba(216,180,92,0.3)');
     hglow.addColorStop(1, 'rgba(216,180,92,0)');
     c.fillStyle = hglow;
     c.beginPath();
-    c.arc(16, 0, 78, 0, Math.PI * 2);
+    c.arc(20, 0, 100, 0, Math.PI * 2);
     c.fill();
-    c.scale(1.8, 1.8);
+    c.scale(2.3, 2.3);
     // 鬃毛
     c.strokeStyle = 'rgba(216,180,92,0.75)';
     c.lineWidth = 2.2;
@@ -7682,11 +7713,11 @@
 
     // 金屑环
     c.globalAlpha = a * 0.7;
-    for (var p = 0; p < 8; p++) {
+    for (var p = 0; p < 10; p++) {
       var pa = state.time * 1.6 + p * 0.8;
       c.fillStyle = p % 2 === 0 ? '#d8b45c' : '#17130f';
       c.beginPath();
-      c.arc(h.x + Math.cos(pa) * 46, h.y + Math.sin(pa) * 30, 1.8, 0, Math.PI * 2);
+      c.arc(h.x + Math.cos(pa) * 60, h.y + Math.sin(pa) * 40, 2.2, 0, Math.PI * 2);
       c.fill();
     }
     c.restore();
