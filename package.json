@@ -1,0 +1,16 @@
+{
+  "name": "mozhan-keyblade",
+  "productName": "墨战键影",
+  "version": "1.0.0",
+  "description": "墨战 · 键影 —— 水墨风打字闯关与局域网对坐",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-packager . MozhanKeyblade --platform=win32 --arch=x64 --out=../release --overwrite --asar --ignore=\"^/release\""
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^45.4.1"
+  }
+}

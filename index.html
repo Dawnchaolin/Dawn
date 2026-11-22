@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>墨战 · 键影 —— 打字闯关</title>
+<meta name="description" content="水墨风打字闯关：键入词句，以墨为刃，斩尽来敌。">
+<script>
+/* 资源加载失败兜底：脚本或样式没能取到时留下标记，extra.js 会给出提示 */
+window.addEventListener('error', function (e) {
+  var t = e && e.target;
+  if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')) {
+    window.__MOZHAN_ASSET_ERROR = t.getAttribute('src') || t.getAttribute('href') || '';
+  }
+}, true);
+</script>
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/duel.css">
+</head>
+<body data-view="home">
+
+<div class="ink-scene" aria-hidden="true">
+  <svg class="ink-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f3ebda"/>
+        <stop offset="0.55" stop-color="#ece1cc"/>
+        <stop offset="1" stop-color="#e2d3b8"/>
+      </linearGradient>
+      <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color="#fffaf0" stop-opacity="0.85"/>
+        <stop offset="1" stop-color="#fffaf0" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="soften" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="22"/>
+      </filter>
+      <filter id="soften2" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="9"/>
+      </filter>
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+        <feComponentTransfer><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
+      </filter>
+    </defs>
+    <rect width="1600" height="900" fill="url(#sky)"/>
+    <ellipse cx="1240" cy="230" rx="330" ry="270" fill="url(#glow)"/>
+    <circle cx="1246" cy="206" r="146" fill="#fbf4e6" opacity="0.55"/>
+    <circle cx="1246" cy="206" r="146" fill="none" stroke="#17130f" stroke-width="1.4" opacity="0.16"/>
+    <circle cx="1246" cy="206" r="132" fill="none" stroke="#17130f" stroke-width="0.8" opacity="0.08"/>
+    <g filter="url(#soften)" opacity="0.5">
+      <path d="M-40 712 L110 618 L214 674 L342 560 L452 650 L572 584 L702 668 L824 598 L948 664 L1076 578 L1198 652 L1322 596 L1452 664 L1600 608 L1600 940 L-40 940 Z" fill="#4b463d" opacity="0.32"/>
+    </g>
+    <path d="M-40 772 L128 698 L262 744 L392 664 L512 736 L638 688 L762 754 L886 680 L1012 748 L1140 674 L1268 744 L1398 700 L1520 762 L1640 718 L1640 940 L-40 940 Z" fill="#2b2721" opacity="0.16"/>
+    <path d="M-40 854 L164 800 L308 844 L452 780 L596 852 L740 812 L884 862 L1028 800 L1172 856 L1316 810 L1460 868 L1640 818 L1640 940 L-40 940 Z" fill="#1b1813" opacity="0.26"/>
+    <g filter="url(#soften)" opacity="0.7">
+      <ellipse cx="420" cy="742" rx="360" ry="40" fill="#f6eedd" opacity="0.55"/>
+      <ellipse cx="1120" cy="790" rx="420" ry="46" fill="#f6eedd" opacity="0.5"/>
+    </g>
+    <g opacity="0.16" stroke="#17130f" fill="none" stroke-linecap="round">
+      <path d="M78 900 C84 760 76 660 94 566" stroke-width="3"/>
+      <path d="M96 640 C126 618 144 600 156 570" stroke-width="2"/>
+      <path d="M108 706 C142 696 164 682 180 660" stroke-width="2"/>
+      <path d="M88 780 C122 774 148 762 166 742" stroke-width="2"/>
+      <path d="M1528 900 C1520 780 1528 692 1508 604" stroke-width="3"/>
+      <path d="M1508 686 C1478 666 1462 648 1450 620" stroke-width="2"/>
+      <path d="M1518 754 C1486 744 1462 730 1446 708" stroke-width="2"/>
+    </g>
+    <rect width="1600" height="900" filter="url(#grain)" opacity="0.4"/>
+  </svg>
+</div>
+
+<div id="app">
+
+  <!-- ========== 主页 ========== -->
+  <section class="view is-active" data-view="home">
+    <div class="home-inner">
+      <header class="home-top">
+        <div class="brand-mark"><span>墨</span><i>INKKEN</i></div>
+        <div class="top-tools">
+          <button class="ghost-btn" id="btn-guide" type="button">三步上手</button>
+          <button class="ghost-btn" id="btn-help" type="button">玩法说明</button>
+          <button class="ghost-btn" id="btn-sound-home" type="button">音效：开</button>
+        </div>
+      </header>
+
+      <div class="home-hero">
+        <p class="hero-kicker">INK · KEY · BLADE</p>
+        <div class="hero-title-row">
+          <h1 class="hero-title">墨战</h1>
+          <div class="hero-seal"><span>键影</span></div>
+        </div>
+        <p class="hero-sub">以键盘为锋，以墨为血。键入词句，斩尽来敌。</p>
+      </div>
+
+      <div class="home-start">
+        <button class="start-cta" data-go="levels" type="button">
+          <span class="sc-kicker">START TRAINING</span>
+          <span class="sc-title">开始训练</span>
+          <span class="sc-desc">从第一境「基准键位」起步 · 一局约 70 秒 · 每敲对一个字母就是一次攻击</span>
+          <span class="sc-arrow">→</span>
+        </button>
+        <button class="start-side" data-go="report" type="button">
+          <span class="ss-kicker">PROGRESS</span>
+          <b>训练报告</b>
+          <em>速度 · 精准 · 键位熟练度 · 易错热图</em>
+          <span class="ss-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="home-groups">
+        <section class="home-group">
+          <header class="hg-head"><span class="hg-num">壹</span><h2>闯关</h2><em>CAMPAIGN</em></header>
+          <div class="hg-list">
+            <button class="entry" data-go="levels" type="button">
+              <span class="entry-main"><b>关卡模式</b><i>二十二境由浅入深，练基准键位到整篇长卷的连贯指法</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="home-group">
+          <header class="hg-head"><span class="hg-num">贰</span><h2>记忆</h2><em>MEMORY</em></header>
+          <div class="hg-list">
+            <button class="entry" data-go="army" type="button">
+              <span class="entry-main"><b>大破外军</b><i>高考 3500 词按词频编阵，看汉语回忆英文拼写</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="home-group">
+          <header class="hg-head"><span class="hg-num">叁</span><h2>长文</h2><em>LONG TEXT</em></header>
+          <div class="hg-list">
+            <button class="entry" id="btn-long-mode" type="button">
+              <span class="entry-main"><b>长文模式</b><i>城楼两侧长文，词末自动重击，练整句节奏与句读</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+            <button class="entry" id="btn-essay-mode" type="button">
+              <span class="entry-main"><b>整篇长文</b><i>百字至八百字整块翻页，练长时专注与稳定</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="home-group">
+          <header class="hg-head"><span class="hg-num">肆</span><h2>无限</h2><em>ENDLESS</em></header>
+          <div class="hg-list">
+            <button class="entry" data-go="endless" type="button">
+              <span class="entry-main"><b>无限模式</b><i>英语 / 长句 / 文章自由组合，不设终点连战</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="home-group">
+          <header class="hg-head"><span class="hg-num">伍</span><h2>联机</h2><em>LAN VERSUS</em></header>
+          <div class="hg-list">
+            <button class="entry" data-go="duel" type="button">
+              <span class="entry-main"><b>联机对战</b><i>局域网同题对坐，输入即攻，攻守相消</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="home-group">
+          <header class="hg-head"><span class="hg-num">陆</span><h2>设置</h2><em>SETTINGS</em></header>
+          <div class="hg-list">
+            <button class="entry entry-toggle" id="speed-toggle" type="button" aria-pressed="false">
+              <span class="entry-main"><b>速字模式 <span class="entry-state" id="speed-state">关</span></b><i>汉字整词上屏自动重击；英文词保持原玩法</i></span>
+              <span class="mode-dot"></span>
+            </button>
+            <button class="entry" data-go="skins" type="button">
+              <span class="entry-main"><b>皮肤装扮</b><i>四角色 · 双形貌 · 四兵器，换装不改数值</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+            <button class="entry" data-go="tutorial" type="button">
+              <span class="entry-main"><b>十指基础教学</b><i>键位示意图与互动带练，练指法分工</i></span>
+              <span class="entry-arrow">→</span>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <footer class="home-foot">
+        <button class="loadout-pill" id="home-loadout" type="button">当前装扮：墨客 · 青衫 ／ 弓</button>
+        <p class="foot-note">建议使用标准键盘 · 中文关卡需系统拼音输入法 · 声音在首次击键后启用</p>
+      </footer>
+    </div>
+    <div class="side-script left" aria-hidden="true">墨落成锋</div>
+    <div class="side-script right" aria-hidden="true">键起生风</div>
+  </section>
+
+  <!-- ========== 关卡选择 ========== -->
+  <section class="view" data-view="levels">
+    <div class="page">
+      <header class="page-head">
+        <button class="back-btn" data-back="home" type="button">← 返回</button>
+        <div class="page-head-main">
+          <p class="eyebrow">CAMPAIGN</p>
+          <h2>二十二境</h2>
+          <p class="page-desc">指法由简入繁，敌潮由缓至急。每境都需斩满目标并在限时内破关，精准度只计入战报。</p>
+        </div>
+        <div class="page-head-right" id="progress-summary">已通关 0 / 22</div>
+      </header>
+      <div class="level-grid" id="level-grid"></div>
+      <p class="page-note">输入字母即为攻击 · 完成整词后按 <b>空格</b> 释放重击 · 正确输入 30 次后按 <b>Enter</b> 释放终极 · <b>Esc</b> 暂停</p>
+    </div>
+  </section>
+
+  <!-- ========== 战斗 ========== -->
+  <section class="view" data-view="battle">
+    <div class="battle-stage">
+      <div class="monitor" id="monitor">
+        <div class="monitor-screen">
+          <canvas id="battle-canvas" aria-label="战斗画面"></canvas>
+
+          <div class="hud">
+            <div class="hud-left">
+              <div class="hp-plate">
+                <span class="hp-label">命</span>
+                <div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div>
+                <span class="hp-num" id="hp-num">100</span>
+              </div>
+              <div class="level-tag"><span id="hud-level-index">第一境</span><b id="hud-level-name">基准键位</b></div>
+              <div class="prof-strip" id="prof-strip" aria-label="键位分组熟练度">
+                <span class="prof-item" data-group="lh"><em>左基</em><span class="prof-bar"><i></i></span></span>
+                <span class="prof-item" data-group="rh"><em>右基</em><span class="prof-bar"><i></i></span></span>
+                <span class="prof-item" data-group="top"><em>上排</em><span class="prof-bar"><i></i></span></span>
+                <span class="prof-item" data-group="bottom"><em>下排</em><span class="prof-bar"><i></i></span></span>
+                <span class="prof-item" data-group="num"><em>数符</em><span class="prof-bar"><i></i></span></span>
+              </div>
+              <div class="train-tag" id="train-tag"></div>
+            </div>
+
+            <div class="hud-center">
+              <div class="goal-pips" id="goal-pips"></div>
+              <div class="goal-label" id="goal-label">斩 0 / 16</div>
+              <div class="goal-sub"><span class="goal-timer" id="hud-timer">01:40</span></div>
+            </div>
+
+            <div class="hud-right">
+              <div class="stat stat-acc" id="acc-box">
+                <b id="stat-acc">100%</b>
+                <span id="stat-acc-req">本局精准</span>
+              </div>
+              <div class="stat stat-combo" id="combo-box">
+                <b id="stat-combo">0</b>
+                <span>连击</span>
+              </div>
+              <div class="tier-seal" id="tier-seal">一重</div>
+            </div>
+          </div>
+
+          <div class="hud-bottom">
+            <span class="loadout-mini" id="battle-loadout">墨客 · 青衫 ／ 弓</span>
+            <span class="ult-gauge" id="ult-gauge" title="终极一击：正确输入 30 次蓄满，按 Enter 释放">
+              <em class="ult-seal">终</em>
+              <span class="ult-track"><i id="ult-fill"></i></span>
+              <em class="ult-num" id="ult-num">0/30</em>
+            </span>
+            <span class="input-hint" id="input-hint">输入字母落墨 · 空格重击 · Enter 终极</span>
+            <div class="battle-tools">
+              <button class="icon-btn" id="btn-mute" type="button" title="音效开关">音</button>
+              <button class="icon-btn" id="btn-pause" type="button" title="暂停（Esc）">停</button>
+            </div>
+          </div>
+
+          <div class="speed-box" id="speed-box" hidden>
+            <div class="speed-head">
+              <span class="speed-seal">速</span>
+              <span class="speed-title">逐字 / 整词上屏 · 全对即发</span>
+              <b class="speed-mul" id="speed-mul"></b>
+            </div>
+            <div class="speed-target" id="speed-target"></div>
+            <div class="speed-input" id="speed-input"></div>
+          </div>
+
+          <div class="drill-box" id="drill-box" hidden>
+            <div class="drill-head">
+              <span class="drill-stage" id="drill-stage">教学</span>
+              <span class="drill-count" id="drill-count"></span>
+              <span class="drill-streak" id="drill-streak"></span>
+            </div>
+            <div class="drill-cn" id="drill-cn"></div>
+            <div class="drill-en" id="drill-en"></div>
+            <div class="drill-typed" id="drill-typed"></div>
+          </div>
+
+          <div class="long-strip" id="long-strip" hidden>
+            <div class="ls-head">
+              <span class="ls-seal">文</span>
+              <span class="ls-title" id="long-strip-title"></span>
+              <span class="ls-batch" id="long-strip-batch"></span>
+            </div>
+            <div class="ls-body">
+              <span class="ls-word" id="long-strip-word"></span>
+              <span class="ls-py" id="long-strip-py"></span>
+            </div>
+          </div>
+
+          <div class="battle-toast" id="battle-toast"></div>
+          <div class="overlay" id="battle-overlay" hidden></div>
+          <input id="key-capture" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="键盘输入捕获">
+        </div>
+        <div class="monitor-chin">
+          <span class="chin-seal">墨屏</span>
+          <span class="chin-led"></span>
+          <span class="chin-note">TAKE YOUR KEYS AS BLADES</span>
+          <span class="chin-model">INK-90 · 壹</span>
+        </div>
+      </div>
+
+      <div class="battle-hintbar">
+        <span><i>字母</i> 落墨一击</span>
+        <span><i>空格</i> 蓄力重击</span>
+        <span><i>Enter</i> 终极一击</span>
+        <span><i>Esc</i> 暂停</span>
+        <span class="hintbar-right" id="hintbar-loadout"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 皮肤 ========== -->
+  <section class="view" data-view="skins">
+    <div class="page">
+      <header class="page-head">
+        <button class="back-btn" data-back="home" type="button">← 返回</button>
+        <div class="page-head-main">
+          <p class="eyebrow">SKINS</p>
+          <h2>衣冠 · 兵器</h2>
+          <p class="page-desc">四角色，各含男女两形；四兵器，四套攻击表现。选择即装备。</p>
+        </div>
+        <div class="page-head-right">当前：<b id="skin-summary">墨客 · 青衫 ／ 弓</b></div>
+      </header>
+
+      <div class="skin-layout">
+        <aside class="skin-preview">
+          <div class="preview-frame">
+            <div class="preview-art" id="skin-preview-art"></div>
+            <span class="preview-corner tl"></span><span class="preview-corner tr"></span>
+            <span class="preview-corner bl"></span><span class="preview-corner br"></span>
+            <span class="preview-vertical">形 · 器</span>
+          </div>
+          <div class="preview-meta">
+            <p class="preview-family" id="preview-family">执笔为锋</p>
+            <h3 id="preview-name">墨客 · 青衫</h3>
+            <p class="preview-desc" id="preview-desc"></p>
+            <div class="tag-row" id="preview-tags"></div>
+          </div>
+        </aside>
+
+        <div class="skin-picker">
+          <section class="picker-block">
+            <h3 class="picker-title">角色 <span>CHARACTERS</span></h3>
+            <div class="char-grid" id="char-grid"></div>
+          </section>
+          <section class="picker-block">
+            <h3 class="picker-title">武器 <span>WEAPONS</span></h3>
+            <p class="picker-note">立绘所持为角色本位兵器；出战投射物随所选兵器变化。</p>
+            <div class="weapon-grid" id="weapon-grid"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 十指教学 ========== -->
+  <section class="view" data-view="tutorial">
+    <div class="page">
+      <header class="page-head">
+        <button class="back-btn" data-back="home" type="button">← 返回</button>
+        <div class="page-head-main">
+          <p class="eyebrow">FINGERING</p>
+          <h2>十指基础</h2>
+          <p class="page-desc">每一根手指都有自己的疆域。先看图，再按「互动带练」逐键实按一轮。</p>
+        </div>
+        <div class="page-head-right">基准键位：<b class="mono-inline">A S D F · J K L ;</b></div>
+      </header>
+
+      <div class="tutorial-layout">
+        <section class="tutorial-block wide practice-block">
+          <h3 class="block-title">互动带练 <span>GUIDED PRACTICE</span></h3>
+          <div class="practice-grid">
+            <div class="practice-stage">
+              <p class="practice-group" id="practice-group">未开始</p>
+              <div class="practice-key" id="practice-key">归位</div>
+              <p class="practice-finger" id="practice-finger">食指落 F / J · 双拇指轻搭空格</p>
+              <p class="practice-feedback" id="practice-feedback" aria-live="polite">按「开始带练」，从基准键位逐键走到全键盘。</p>
+              <div class="practice-actions">
+                <button class="btn" id="practice-start" type="button">开始带练</button>
+              </div>
+              <div class="practice-progress" aria-hidden="true"><div class="practice-bar" id="practice-bar"></div></div>
+              <p class="practice-count" id="practice-count">0 / 39</p>
+            </div>
+            <aside class="practice-note">
+              <p><b>怎么练</b>系统高亮一个键，并标出该用哪根手指。必须实际按下正确键位，才会进入下一个键。</p>
+              <p><b>按错了</b>立即提示这个键该归哪根手指，以及当前步骤的正确指法。</p>
+              <p><b>范围</b>基准键位 → 上排 → 下排 → 数字 → 空格，共 39 键。</p>
+              <p class="practice-tip">先求准，再求快；每次敲完都回到 F / J。</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="tutorial-block wide">
+          <h3 class="block-title">键位分工图 <span>FINGER MAP</span></h3>
+          <div class="keyboard-wrap" id="finger-keyboard"></div>
+          <div class="finger-legend" id="finger-legend"></div>
+        </section>
+
+        <section class="tutorial-block">
+          <h3 class="block-title">双手示意 <span>HANDS</span></h3>
+          <div class="hands-wrap" id="hand-diagram"></div>
+          <p class="block-note">双拇指轻搭空格；左右 Shift 分别由相对侧的小指负责。</p>
+        </section>
+
+        <section class="tutorial-block">
+          <h3 class="block-title">练习要领 <span>ESSENTIALS</span></h3>
+          <ol class="tips-list">
+            <li><b>归位</b><span>F 与 J 有凸起，食指随时能摸回基准位。</span></li>
+            <li><b>回位</b><span>每敲完一个远键，手指立即回到基准键。</span></li>
+            <li><b>不看键盘</b><span>视线留在屏幕，靠肌肉记忆定位。</span></li>
+            <li><b>均匀</b><span>宁可慢而准，不要忽快忽慢。准确率就是伤害。</span></li>
+            <li><b>肩腕放松</b><span>手腕悬空或轻托，别压在桌沿上。</span></li>
+            <li><b>进阶顺序</b><span>基准键位 → 上排 → 下排 → 数字 → 符号 / 大写 / 标点 → 长词与短语 → 中文与成语。</span></li>
+          </ol>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 大破外军 ========== -->
+  <section class="view" data-view="army">
+    <div class="page">
+      <header class="page-head">
+        <button class="back-btn" data-back="home" type="button">← 返回</button>
+        <div class="page-head-main">
+          <p class="eyebrow">WORD ARMY</p>
+          <h2>大破外军</h2>
+          <p class="page-desc">高中英语 3500 词，按近五年通用语料词频由高到低编阵。每阵 15 词：先过教学关，才开练习关。</p>
+        </div>
+        <div class="page-head-right" id="army-summary">已破 0 阵</div>
+      </header>
+
+      <div class="army-tabs" id="army-tabs">
+        <button class="army-tab is-active" data-army-tab="normal" type="button">普通关卡</button>
+        <button class="army-tab" data-army-tab="custom" type="button">自定义关卡</button>
+      </div>
+
+      <div class="army-grid" id="army-grid"></div>
+
+      <section class="custom-panel" id="custom-panel" hidden>
+        <div class="custom-block">
+          <h3 class="block-title">词条录入 <span>WORD BANK</span></h3>
+          <div class="cw-form">
+            <input id="cw-en" type="text" maxlength="40" placeholder="英文单词，如 lantern" autocomplete="off">
+            <input id="cw-mean" type="text" maxlength="60" placeholder="汉语释义，如 灯笼" autocomplete="off">
+            <button class="btn" id="cw-add" type="button">录入词条</button>
+          </div>
+          <p class="custom-note" id="cw-tip">每条自动编号，编号从 1 开始；删除后编号不复用。</p>
+          <div class="cw-list" id="cw-list"></div>
+        </div>
+
+        <div class="custom-block">
+          <h3 class="block-title">编排关卡 <span>LEVEL COMPOSER</span></h3>
+          <div class="cw-form">
+            <input id="cw-ids" type="text" placeholder="填 15 个词条编号，空格或逗号分隔" autocomplete="off">
+            <button class="btn" id="cw-level" type="button">保存关卡</button>
+          </div>
+          <p class="custom-note">每关必须正好 15 个有效编号；编号可重复使用，但同一关内不要重复。</p>
+          <div class="cw-list" id="cw-levels"></div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ========== 无限模式 ========== -->
+  <section class="view" data-view="endless">
+    <div class="page">
+      <header class="page-head">
+        <button class="back-btn" data-back="home" type="button">← 返回</button>
+        <div class="page-head-main">
+          <p class="eyebrow">ENDLESS</p>
+          <h2>无限模式</h2>
+          <p class="page-desc">自选随机出现的输入形式，可任意组合。不设关卡终点，敌潮持续，直到你主动退出或城墙失守。</p>
+        </div>
+        <div class="page-head-right">词频 3500 · 长句 127 · 整篇 39</div>
+      </header>
+
+      <div class="endless-card">
+        <p class="endless-title">随机范围</p>
+        <div class="endless-opts">
+          <label class="es-opt"><input type="checkbox" id="es-en" checked><span>英语单词<em>直接显示英文 → 照词输入</em></span></label>
+          <label class="es-opt"><input type="checkbox" id="es-long"><span>长句<em>汉语句子 → 输入拼音</em></span></label>
+          <label class="es-opt"><input type="checkbox" id="es-essay"><span>文章<em>整篇选段 → 输入拼音</em></span></label>
+        </div>
+        <p class="endless-note">至少选择一项。英语按词频随机抽取；长句与文章从公版文本库抽取片段，逐字母落墨、每输入一个正确字母攻击一次。</p>
+        <button class="btn" id="endless-start" type="button">开始无限</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 局域网对坐 ========== -->
+  <section class="view" data-view="duel">
+    <div class="duel-wrap">
+      <header class="duel-head">
+        <button class="ghost-btn" id="duel-back" type="button">← 返回</button>
+        <div class="duel-brand"><b>对坐</b><i>LAN VERSUS</i></div>
+        <div class="duel-conn" id="duel-conn"><span class="dot"></span><span id="duel-conn-text">未连接</span></div>
+      </header>
+
+      <div class="duel-lobby" id="duel-lobby">
+        <div class="duel-card">
+          <p class="eyebrow">HOST</p>
+          <h3>开一间房</h3>
+          <label class="duel-field"><span>名号</span><input id="duel-nick" maxlength="12" autocomplete="off"></label>
+          <label class="duel-field"><span>房间名</span><input id="duel-roomname" maxlength="18" placeholder="留空则用「名号 + 的房间」" autocomplete="off"></label>
+          <p class="duel-sub">对战内容</p>
+          <div class="duel-opts">
+            <label class="es-opt"><input type="radio" name="duel-content" value="en-zh" checked><span>英语单词 · 汉译英<em>看释义，输入英文</em></span></label>
+            <label class="es-opt"><input type="radio" name="duel-content" value="en-en"><span>英语单词 · 直接显示英文<em>照词输入</em></span></label>
+            <label class="es-opt"><input type="radio" name="duel-content" value="zh"><span>汉语文章<em>公版文句，输入拼音字母</em></span></label>
+          </div>
+          <button class="btn" id="duel-create" type="button">开房</button>
+          <p class="duel-hint" id="duel-filehint" hidden>当前以 file:// 打开，浏览器无法互连。请使用桌面版，或在本目录运行 <code>node server/room-server.js</code> 后访问本机地址。</p>
+          <p class="duel-hint" id="duel-netinfo"></p>
+        </div>
+        <div class="duel-card duel-rooms">
+          <div class="duel-rooms-head"><p class="eyebrow">ROOMS</p><button class="ghost-btn" id="duel-refresh" type="button">刷新</button></div>
+          <h3>局域网房间</h3>
+          <div class="duel-room-list" id="duel-room-list"></div>
+          <p class="duel-hint">同一局域网内的房间会自动出现；加入后双方拿到完全相同的题目序列。</p>
+        </div>
+      </div>
+
+      <div class="duel-roombox" id="duel-room" hidden>
+        <p class="eyebrow">ROOM</p>
+        <h2 id="duel-room-name">房间</h2>
+        <p class="duel-room-meta"><span id="duel-room-content">—</span><span id="duel-room-state">等待中</span><span id="duel-room-role">—</span></p>
+        <div class="duel-players">
+          <div class="duel-player"><span>房主</span><b id="duel-room-host">—</b></div>
+          <div class="duel-player"><span>应战</span><b id="duel-room-guest">等待加入</b></div>
+        </div>
+        <p class="duel-wait" id="duel-room-wait"></p>
+        <div class="duel-room-actions">
+          <button class="btn" id="duel-room-start" type="button">开始对战</button>
+          <button class="ghost-btn" id="duel-room-leave" type="button">离开房间</button>
+        </div>
+      </div>
+
+      <div class="duel-stage" id="duel-stage" hidden>
+        <div class="duel-field">
+          <button class="ghost-btn duel-exit" id="duel-stage-back" type="button">← 退出</button>
+          <canvas id="duel-canvas"></canvas>
+          <div class="duel-hud">
+            <div class="duel-hp-plate is-me">
+              <div class="hp-line"><b id="duel-nick-me">你</b><span id="duel-hp-me">180</span></div>
+              <div class="hp-track"><i id="duel-bar-me" style="width:100%"></i></div>
+            </div>
+            <div class="duel-center">
+              <span id="duel-timer">2:30</span>
+              <em><b id="duel-combo">0 连</b> · 精准 <b id="duel-acc">100%</b></em>
+            </div>
+            <div class="duel-hp-plate is-foe">
+              <div class="hp-line"><span id="duel-hp-foe">180</span><b id="duel-nick-foe">对手</b></div>
+              <div class="hp-track"><i id="duel-bar-foe" style="width:100%"></i></div>
+            </div>
+          </div>
+          <div class="duel-banner" id="duel-banner" hidden>3</div>
+          <div class="duel-result" id="duel-result" hidden>
+            <div class="duel-seal" id="duel-result-seal">胜</div>
+            <h3 id="duel-result-title">胜局</h3>
+            <p id="duel-result-sub"></p>
+            <div class="duel-result-actions">
+              <button class="btn" id="duel-result-again" type="button">再开一局</button>
+              <button class="ghost-btn" id="duel-result-room" type="button">回到房间</button>
+              <button class="ghost-btn" id="duel-result-leave" type="button">返回大厅</button>
+            </div>
+          </div>
+        </div>
+        <div class="duel-prompt" id="duel-prompt">
+          <div class="dp-top">
+            <span id="duel-prompt-label">英语 · 汉译英</span>
+            <span id="duel-prompt-meta"></span>
+            <span id="duel-prompt-tip"></span>
+          </div>
+          <div class="dp-main" id="duel-prompt-main">—</div>
+          <div class="dp-sub" id="duel-prompt-sub"></div>
+          <div class="dp-typed" id="duel-prompt-typed"></div>
+        </div>
+      </div>
+
+      <div class="duel-toast" id="duel-toast" hidden></div>
+    </div>
+  </section>
+
+  <!-- ========== 训练报告 ========== -->
+  <section class="view" data-view="report">
+    <div class="page">
+      <header class="page-head">
+        <button class="back-btn" data-back="home" type="button">← 返回</button>
+        <div class="page-head-main">
+          <p class="eyebrow">TRAINING REPORT</p>
+          <h2>训练报告</h2>
+          <p class="page-desc">跨局汇总速度、精准与键位熟练度，证明每一次练习都在积累。数据全部取自本地存档。</p>
+        </div>
+        <div class="page-head-right" id="report-stamp">本地统计</div>
+      </header>
+      <div class="report-body" id="report-body"></div>
+      <p class="page-note">报告随每局自动更新 · 清除浏览器数据会同时清空训练记录</p>
+    </div>
+  </section>
+
+  <!-- ========== 三步上手（可跳过，非模态） ========== -->
+  <div class="guide" id="home-guide" hidden>
+    <div class="guide-card" role="dialog" aria-label="三步上手">
+      <button class="guide-skip" id="guide-skip" type="button" aria-label="跳过引导">跳过</button>
+      <p class="guide-kicker">三步上手 · 30 秒打出第一次击杀</p>
+      <ol class="guide-steps">
+        <li><b>① 键入</b><span>照着词帖敲字母，中文敲拼音。每对一个字母就发一击。</span></li>
+        <li><b>② 空格重击</b><span>整个词打完后按 <kbd>空格</kbd>，三倍伤害，短词通常一击破敌。</span></li>
+        <li><b>③ Enter 终极</b><span>正确输入蓄满 30 次后按 <kbd>Enter</kbd>，释放终极一击清场。</span></li>
+      </ol>
+      <div class="guide-actions">
+        <button class="btn" id="guide-start" type="button">直接进第一关</button>
+        <button class="ghost-btn" id="guide-later" type="button">先去逛逛</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 说明弹层 ========== -->
+  <div class="modal" id="help-modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <button class="modal-close" id="help-close" type="button" aria-label="关闭">×</button>
+      <p class="eyebrow">RULES</p>
+      <h3 id="help-title">玩法与数值</h3>
+      <div class="modal-body">
+        <div class="rule-row"><b>攻击</b><span>每输入一个正确字母，锁定距玩家最近的敌人发起一次攻击，造成 <em>100% 攻击力</em>。整词完成后再按 <em>空格</em>，造成 <em>300%</em> 重击。<em>Enter</em> 专用于终极一击，不参与重击，因而不与空格抢输入。</span></div>
+        <div class="rule-row"><b>精准度</b><span>精准度 P ＝ 正确字母数 ÷ 总字母数 × 100%（本局累计，无输入时按 100%）。伤害加成 ＝ P × 1%，即精准度每高 1 个百分点，伤害 +1%；综合倍率 ＝ 1 + P ÷ 100。重击同样享受该倍率。</span></div>
+        <div class="rule-row"><b>连击</b><span>连击只影响视听强度，不影响伤害。达到 10 / 25 / 50 / 80 连击时升档：墨点更密、震屏更强、音效升调并叠加层次。</span></div>
+        <div class="rule-row"><b>受击</b><span>敌人抵达屏幕下方玩家领地即造成侵蚀伤害，并当场消散。生命归零则本境失败。</span></div>
+        <div class="rule-row"><b>过关</b><span>斩满本境目标数、并在限时内完成即可破境。精准度不再作为门槛，只用于结算展示：结算页给出本局最高精准度；全程零输入失误另盖「无瑕」印。</span></div>
+        <div class="rule-row"><b>压迫</b><span>关卡越高，敌人推进更快、刷新更密、同屏更多；后期只保留两张词帖，并定时翻换未被你动过的词帖，逼你快速决策。</span></div>
+        <div class="rule-row"><b>带练</b><span>「十指基础教学」内保留可直接查看的说明，另可按互动带练：逐键高亮、校验实际按键，按错即时提示正确手指。</span></div>
+        <div class="rule-row"><b>中文</b><span>汉字词语按拼音逐字母落墨；候选字全部上屏后方可重击。未检测到输入法时，拼音敲完 0.5 秒后兜底放行。</span></div>
+        <div class="rule-row"><b>速字模式</b><span>主页可开关，并自动记忆。开启后汉字不再逐字母攻击：可逐字或整词上屏，全部汉字正确后自动发出一次重击，无需再按输出键；无输入法时可用完整拼音直发。英文词仍按普通模式操作。</span></div>
+        <div class="rule-row"><b>Boss 攻防</b><span>第 15、16 境为整句攻防关：每打完一个汉字的拼音，自动发一矢普通攻击，并抵消最近的一发来袭墨弹（一发一字，不连带）。第 15 境墨弹 2.6 秒起、第 16 境 2.0 秒起，后期会出现双发、三发弹幕，未被拦截者命中城墙会扣血。守将每 4 轮攻击让「本源」逼近一阶，满 6 阶即城墙失守；整句完成释放终结技，可击退本源一阶并回气 8 点。</span></div>
+        <div class="rule-row"><b>Boss 标点</b><span>Boss 关的标点必须实际输入（其余长文关标点只显示、不输入）：<em>，→ ,</em>　<em>、→ ,</em>　<em>。→ .</em>　<em>；→ ;</em>　<em>：→ :</em>　<em>！→ !</em>　<em>？→ ?</em>。全角标点由输入法直接上屏也判定正确；打错计一次失误并断连击。</span></div>
+        <div class="rule-row"><b>整篇长文</b><span>第 20–22 境把整篇文章铺在屏幕左下、右下两块纸块上，按块铺满后整块翻页；当前词浅朱底、当前字朱红下划线、已打过的字淡化，词条显示在本块右下角。规则同第 17–19 境：词末重击、句末超级重击、标点不输入、无需手动输出；长文里空格不触发重击，终极仍按 Enter 释放。</span></div>
+        <div class="rule-row"><b>终极一击</b><span>每次正确输入（字母 / 拼音 / 长文字符，含 Boss 与长文关）+1 蓄势，满 <em>30</em> 次解锁并亮起金环；按 <em>Enter</em> 释放，释放后清零重新蓄势，每局开局重置。未解锁时按 Enter 只提示进度、不消耗、不误触。四兵器演出不同：弓 · 万箭齐发；剑 · 巨型剑气自下而上横扫；法杖 · 灵压环全场扩散；墨笔 · 水墨金龙往返穿梭。伤害随精准度倍率浮动，详见 README。</span></div>
+        <div class="rule-row"><b>长词倍率</b><span>重击按字母/拼音总数提升伤害：5–7 字 ×1.1、8–11 字 ×1.25、12–16 字 ×1.45、17 字以上 ×1.7；轻击不享受该倍率。词帖左上角会标出当前倍率。</span></div>
+        <div class="rule-row"><b>释义</b><span>英文重击后，词帖原位短暂浮现该词最常用汉语释义，约 1.05 秒后随墨迹上扬消散。详见 README。</span></div>
+        <div class="rule-row"><b>大破外军</b><span>高考英语 3500 词按近五年通用语料词频由高到低切成每阵 15 词。每阵先打教学关：同时给出汉语释义（最多三义）与英文，连续输对 3 次才换下一个词，木桩靶不还手、不限时；教学关通过后才解锁练习关：只给汉语，逐字母输入英文，每个正确字母攻击一次。</span></div>
+        <div class="rule-row"><b>自定义词战</b><span>在大破外军顶部切换到「自定义关卡」：录入英文与汉语释义后自动获得编号；再用 15 个编号编排一阵。删除词条后编号不复用，已编好的关卡若词条不足 15 个会提示重编。</span></div>
+        <div class="rule-row"><b>无限模式</b><span>可任意勾选英语单词、长句、文章三种输入形式。英语直接显示英文单词、照词逐字母输入；长句与文章抽出中文片段、输入对应拼音。不设终点，每个正确字母攻击一次，退出或城墙失守即结束。</span></div>
+        <div class="rule-row"><b>操作</b><span>Esc 暂停 · 音效按钮切换静音 · 完成后自动记录通关、最高精准度与无瑕记录。</span></div>
+      </div>
+      <p class="modal-foot">墨战 · 键影 · 本地单页版本</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="assets/longtexts.js" defer></script>
+<script src="assets/essays.js" defer></script>
+<script src="assets/vocab.js" defer></script>
+<script src="assets/data.js" defer></script>
+<script src="assets/skins.js" defer></script>
+<script src="assets/audio.js" defer></script>
+<script src="assets/game.js" defer></script>
+<script src="assets/duel.js" defer></script>
+<script src="assets/extra.js" defer></script>
+</body>
+</html>
