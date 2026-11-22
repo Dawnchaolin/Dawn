@@ -1,0 +1,27 @@
+# 依赖
+node_modules/
+outputs/node_modules/
+
+# Electron 打包产物
+release/
+out/
+*.exe
+*.blockmap
+
+# 临时测试文件与本地数据
+_seed.html
+_fail.html
+_novocab.html
+*.log
+logs/
+*.tmp
+*.bak
+*.save
+*.sav
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
